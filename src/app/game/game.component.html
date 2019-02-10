@@ -1,0 +1,88 @@
+<div class="ck-fs-abs ck-canvas-container">
+	<canvas #renderCanvas></canvas>
+</div>
+
+<div @fade *ngIf="gameState === 'main-menu'" class="ck-fs-abs ck-dark-overlay ck-main-menu w3-display-container">
+	<div class="w3-display-topmiddle w3-center ck-xxlarge" style="margin-top:10vh; width: 100%">
+		<span class="ck-piece ck-black">C</span>
+		<span class="ck-piece ck-white">H</span>
+		<span class="ck-piece ck-black">E</span>
+		<span class="ck-piece ck-white">C</span>
+		<span class="ck-piece ck-black">K</span>
+		<span class="ck-piece ck-white">E</span>
+		<span class="ck-piece ck-black">R</span>
+		<span class="ck-piece ck-white">S</span>
+	</div>
+	<div class="w3-display-bottommiddle" style="margin-bottom:10vh">
+		<div class="ck-menu-item  ck-menu-item-button" (click)="gameState = 'ai-selection'">
+			1P vs CPU
+		</div>
+		<div class="ck-menu-item ck-menu-item-button" (click)="newGame(0, 0)">
+			1P vs 2P
+		</div>
+	</div>
+</div>
+
+<div @fade *ngIf="gameState === 'ai-selection'" class="ck-fs-abs ck-dark-overlay w3-display-container">
+	<div class="w3-display-middle w3-center ck-nowrap">
+		<div class="ck-text-shadow ck-xlarge">Select your opponent</div>
+		<div class="ck-menu-item ck-menu-item-button" *ngFor="let ai of aiConfigs" (click)="selectedAi = ai; newGame(0,1)">
+			<span class="w3-right-align w3-margin-right" style="display:inline-block; width: 6em">{{ ai.name }}</span>
+			<app-rating [rating]="ai.difficulty" [maxRating]="5"></app-rating>
+		</div>
+	</div>
+</div>
+
+<div class="w3-display-topmiddle" *ngIf="gameState === 'playing'">
+	<div class="ck-turn-timer" [class.ck-white]="currentPlayer.color === 0" [class.ck-black]="currentPlayer.color === 1">
+		<div class="ck-time">
+			<span>{{ timer.getDigit(0) }}</span>
+			<span>{{ timer.getDigit(1) }}</span>
+			<span>:</span>
+			<span>{{ timer.getDigit(2) }}</span>
+			<span>{{ timer.getDigit(3) }}</span>
+		</div>
+		<div class="ck-player">
+			{{ currentPlayer.color === 0 ? "White" : "Black" }}
+			<i *ngIf="currentPlayer.type === 0" class="far fa-flag" (click)="gameState = 'surrender'"></i>
+		</div>
+		<div class="w3-clear"></div>
+	</div>
+</div>
+
+<div @fade *ngIf="gameState === 'game-over'" class="ck-fs-abs ck-dark-overlay w3-display-container">
+	<div class="w3-display-middle w3-center">
+		<div class="ck-text-shadow ck-xlarge">{{ gameOverText }}</div>
+		<div class="ck-menu-item ck-menu-item-button" (click)="gameState = 'main-menu'">Back to main menu</div>
+	</div>
+</div>
+
+<div @fade *ngIf="gameState === 'loading'" class="ck-fs-abs ck-dark-overlay w3-display-container">
+	<div class="w3-display-middle ck-large" style="white-space: nowrap">
+		<span class="ck-piece ck-black">L</span>
+		<span class="ck-piece ck-white">O</span>
+		<span class="ck-piece ck-black">A</span>
+		<span class="ck-piece ck-white">D</span>
+		<span class="ck-piece ck-black">I</span>
+		<span class="ck-piece ck-white">N</span>
+		<span class="ck-piece ck-black">G</span>
+	</div>
+</div>
+
+<div @fade *ngIf="gameState === 'surrender'" class="ck-fs-abs ck-dark-overlay w3-display-container">
+	<div class="w3-display-middle">
+		<div class="ck-text-shadow ck-xlarge" style="white-space: nowrap">Do you want to surrender?</div>
+		<div class="ck-menu-item ck-menu-item-button" (click)="surrender()">Yes</div>
+		<div class="ck-menu-item ck-menu-item-button" (click)="gameState = 'playing'">No</div>
+	</div>
+</div>
+
+<!--
+<div class="w3-display-topleft w3-white" *ngIf="debug && grid">
+	<div style="width: 256px;height:256px">
+		<div style="width:32px;height:32px;float:left;border:1px solid #000" *ngFor="let g of grid.data">
+			<span *ngIf="g">{{ g.color === 0 ? 'W' : 'B' }}{{ g.king ? 'K' : ' ' }}</span>
+		</div>
+	</div>
+</div>
+-->

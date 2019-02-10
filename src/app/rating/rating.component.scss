@@ -1,0 +1,9 @@
+.ck-rating-container {
+    white-space: nowrap;
+    position: relative;
+    display: inline-block;
+
+    .ck-rating-indicator {
+        display: inline-block;
+    }
+}
