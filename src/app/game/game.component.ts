@@ -81,7 +81,7 @@ export class GameComponent implements OnInit {
   grid: Grid = null;
   gameRenderer: GameRenderer = null;
   gameState: EGameState = EGameState.Loading;
-  @ViewChild("renderCanvas") private canvasRef: ElementRef;
+  @ViewChild("renderCanvas", { static: true }) private canvasRef: ElementRef;
 
 
   constructor() { }
