@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod",
-    "build-web": "ng build --prod --baseHref= --outputPath=dist-web/",
+    "build-ghpages": "ng build --prod --baseHref= --outputPath=docs/",
     "build-electron": "node ./scripts/electron-package.js",
     "build-worker": "node ./build-worker.js",
     "test": "ng test",
