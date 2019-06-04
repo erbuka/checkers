@@ -8,6 +8,6 @@ Checkers game made with [Angular](https://angular.io/) and [ThreeJS](https://thr
 
 ## Build
 - `npm build` - regular Angular production build
-- `npm run build-web` - Angular build with __baseHref =__ _"/checkers/"_
+- `npm run build-ghpages` - Build for GitHub pages
 - `npm run build-electron` - Electron packaging
 - `npm run build-worker` - Builds the web worker and puts it under the _"assets"_ folder
