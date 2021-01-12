@@ -458,23 +458,6 @@ export class Engine {
 
   }
 
-  static evalInWorker(initialGrid: Grid, player: EColor, aiName: string): Promise<IMove> {
-
-    return new Promise((resolve, reject) => {
-      let worker = new Worker("assets/scripts/checkers-worker.js");
-
-      worker.addEventListener("message", (e: MessageEvent) => {
-        resolve(<IMove>e.data);
-      });
-
-      worker.postMessage(<IWorkerInput>{
-        player: player,
-        gridData: initialGrid.toJson(),
-        aiName: aiName
-      });
-    });
-
-  }
 
   eval(initialGrid: Grid, player: EColor, aiName: string): IMove {
 

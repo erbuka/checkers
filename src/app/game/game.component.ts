@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, AfterViewInit } from '@angular/core';
 import { GameRenderer } from '../classes/game-renderer';
-import { Grid, EColor, Engine, IMove, Utility, IAIConfig, AIDefinitions } from '../classes/checkers';
+import { Grid, EColor, Engine, IMove, Utility, IAIConfig, AIDefinitions, IWorkerInput } from '../classes/checkers';
 import {  fadeAnimation } from '../animations';
 enum EGameState {
   Loading = "loading", 
@@ -118,6 +118,24 @@ export class GameComponent implements OnInit {
     this.currentPlayer = this.currentPlayer === this.players[0] ? this.players[1] : this.players[0];
   }
 
+  evalInWorker(initialGrid: Grid, player: EColor, aiName: string): Promise<IMove> {
+
+    return new Promise((resolve, reject) => {
+      let worker = new Worker("../web-workers/checkers.worker", { type: "module" });
+
+      worker.addEventListener("message", (e: MessageEvent) => {
+        resolve(<IMove>e.data);
+      });
+
+      worker.postMessage(<IWorkerInput>{
+        player: player,
+        gridData: initialGrid.toJson(),
+        aiName: aiName
+      });
+    });
+
+  }
+
   nextMove() {
     this.timer.restart();
     if (this.currentPlayer.type === EPlayerType.CPU) {
@@ -127,7 +145,7 @@ export class GameComponent implements OnInit {
       otherwise we just play that move.
       */
 
-      Engine.evalInWorker(this.grid, this.currentPlayer.color, this.selectedAi.name).then((move: IMove) => {
+      this.evalInWorker(this.grid, this.currentPlayer.color, this.selectedAi.name).then((move: IMove) => {
         if (move) {
           this.grid.apply(move);
           this.gameRenderer.apply(move, this.grid, () => {

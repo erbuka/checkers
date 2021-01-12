@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import { Engine, IWorkerInput, Grid } from '../classes/checkers';
 
 /* So this is needed beacuse self has type "Window", and
